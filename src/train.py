@@ -1,5 +1,7 @@
+from numpy import ndarray
 from pandas import DataFrame
 from parse_data import load_data
+from linear_function import linear_function
 
 
 def f(x):
@@ -14,21 +16,28 @@ def mean_squared_error(data: DataFrame, function) -> float:
     return sosr / len(data)
 
 
-def compute_cost(tetha0: int, tetha1: int, m: int, mileage: int):
+def compute_cost(tetha0: int, tetha1: int, x_train: ndarray, y_train: ndarray):
     total_cost = 0
-    return total_cost
+    m = len(x_train)
+    for i in range(m):
+        f = linear_function(tetha0, tetha1, x_train[i])
+        total_cost += (f - y_train[i]) ** 2
+    return total_cost / (2 * m)
+
+
+def compute_gradient(tetha0: int, tetha1: int, x_train: ndarray, y_train: ndarray):
+    pass
 
 
 def train(mileage: int) -> float:
-    tetha0 = 0
-    tetha1 = 0
+    tetha0 = 1  # b
+    tetha1 = 2  # w
+    # mileage = x
     x_train, y_train = load_data()
     if x_train.shape != y_train.shape:
         raise AssertionError("Training data as incorrect shapes")
-    m = x_train.shape[0]
-    # cost = compute_cost(tetha0, tetha1, m, mileage)
-    print(f"recap:\ntetha0: {tetha0}\ntetha1:{tetha1}\nm:{m}\nmileage:{mileage}")
-    # print(f"Actual cost is: {cost}")
+    cost = compute_cost(tetha0, tetha1, x_train, y_train)
+    print(f"Actual cost is: {cost}")
 
 
 if __name__ == "__main__":
