@@ -1,7 +1,7 @@
+from linear_function import linear_function
 from numpy import ndarray
 from pandas import DataFrame
 from parse_data import load_data
-from linear_function import linear_function
 
 
 def f(x):
@@ -25,19 +25,35 @@ def compute_cost(tetha0: int, tetha1: int, x_train: ndarray, y_train: ndarray):
     return total_cost / (2 * m)
 
 
-def compute_gradient(tetha0: int, tetha1: int, x_train: ndarray, y_train: ndarray):
-    pass
+def compute_gradient(
+    tetha0: int, tetha1: int, x_train: ndarray, y_train: ndarray
+) -> float:
+    m = len(x_train)
+
+    dj_tetha0 = 0
+    dj_tetha1 = 0
+
+    for i in range(m):
+        f = linear_function(tetha0, tetha1, x_train[i])
+        dj_tetha0 += (f - y_train[i]) * x_train[i]
+        dj_tetha1 += f - y_train[i]
+
+    dj_tetha0 /= m
+    dj_tetha1 /= m
+    return dj_tetha0, dj_tetha1
 
 
 def train(mileage: int) -> float:
-    tetha0 = 1  # b
-    tetha1 = 2  # w
+    tetha0 = 0  # b
+    tetha1 = 0  # w
     # mileage = x
     x_train, y_train = load_data()
     if x_train.shape != y_train.shape:
         raise AssertionError("Training data as incorrect shapes")
     cost = compute_cost(tetha0, tetha1, x_train, y_train)
+    tmp_dj_dw, tmp_dj_db = compute_gradient(tetha0, tetha1, x_train, y_train)
     print(f"Actual cost is: {cost}")
+    print(f"Gradient is {tmp_dj_dw} - {tmp_dj_db}")
 
 
 if __name__ == "__main__":
