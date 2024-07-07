@@ -16,26 +16,3 @@ def load(path: str) -> pd.DataFrame:
         print(f"Error: {e}")
         exit(1)
     return data_file
-
-
-def normalize_dataset(df: pd.DataFrame) -> pd.DataFrame:
-    df_min_max_scaled = df.copy()
-
-    for column in df_min_max_scaled.columns:
-        df_min_max_scaled[column] = (
-            df_min_max_scaled[column] - df_min_max_scaled[column].min()
-        ) / (df_min_max_scaled[column].max() - df_min_max_scaled[column].min())
-
-    return df_min_max_scaled
-
-
-def load_data(df: pd.DataFrame) -> tuple[pd.DataFrame]:
-    """load_data() -> tuple[pd.DataFrame]
-    return a tuple of Dataframe, the first one
-    is the km and the second one the price
-    """
-    return (df["km"], df["price"])
-
-
-if __name__ == "__main__":
-    print(load_data())
