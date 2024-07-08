@@ -28,9 +28,9 @@ def show_linear_regression(df: pd.DataFrame) -> None:
     for i in range(len(x)):
         y_predict.append(linear_function(theta0, theta1, x[i]))
 
-    plt.title("Linear regression of predictions")
-    plt.scatter(x, y, color="r")
-    plt.plot(x, y_predict, color="g")
+    plt.title("Linear regression line of predictions")
+    plt.scatter(x, y)
+    plt.plot(x, y_predict, color="r")
     plt.ylabel("price (in eur)")
     plt.xlabel("mileage (in km)")
     plt.show()
