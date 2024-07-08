@@ -76,12 +76,11 @@ def train() -> float:
 
     model.save()
 
-    # Bonus: display MAE and MSE to evaluate model accuracy
     y_pred = []
     for i in range(len(x_train)):
         y_pred.append(linear_function(model.theta0, model.theta1, x_train[i]))
 
-    print(f"Mean Squared Error (MSE): {rmse(y_train, y_pred)}")
+    print(f"Root Mean Squared Error (RMSE): {rmse(y_train, y_pred)}")
 
 
 if __name__ == "__main__":
