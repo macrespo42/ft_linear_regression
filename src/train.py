@@ -3,12 +3,11 @@ from pandas import DataFrame
 from linear_function import linear_function
 from parse_data import load
 
-import matplotlib.pyplot as plt
 from describe import TrainingData
 
 
 class LinearRegression:
-    def __init__(self, learning_rate=0.01, n_iters=1500) -> None:
+    def __init__(self, learning_rate=0.01, n_iters=1000) -> None:
         self.learning_rate = learning_rate
         self.n_iters = n_iters
         self.theta0 = 0.0  # b
@@ -42,17 +41,16 @@ class LinearRegression:
 
         return dj_theta0, dj_theta1
 
-    def fit(self, x: np.ndarray, y: np.ndarray) -> tuple[float]:
+    def fit(self, x: np.ndarray, y: np.ndarray) -> None:
         for i in range(self.n_iters):
-            dj_dw, dj_db = self._compute_gradient(x, y)
+            dj_theta1, dj_theta0 = self._compute_gradient(x, y)
 
-            self.theta1 -= self.learning_rate * dj_dw
-            self.theta0 -= self.learning_rate * dj_db
-        return self.theta1, self.theta0
+            self.theta1 -= self.learning_rate * dj_theta1
+            self.theta0 -= self.learning_rate * dj_theta0
 
     def save(self) -> None:
         thetas = DataFrame(data={"theta0": [self.theta0], "theta1": [self.theta1]})
-        thetas.to_csv("dataset/thetas.csv")
+        thetas.to_csv("dataset/thetas.csv", index=False)
         print(thetas)
 
 
@@ -73,12 +71,10 @@ def train() -> float:
         raise AssertionError("Training data as incorrect shapes")
 
     model = LinearRegression()
-    # without normalize
-    theta1, theta0 = model.fit(x_train, y_train)
+    model.fit(x_norm, y_norm)
 
-    # wit normalize
-    # theta1, theta0 = model.fit(x_norm, y_norm)
-    # theta0, theta1 = data.denormalize(theta0, theta1)
+    model.theta0, model.theta1 = data.denormalize(model.theta0, model.theta1)
+
     model.save()
 
 

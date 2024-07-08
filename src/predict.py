@@ -5,7 +5,7 @@ from parse_data import load
 def get_mileage() -> int:
     print("Please enter a mileage: ")
     mileage = input()
-    return int(mileage)
+    return float(mileage)
 
 
 def get_thetas() -> tuple[float]:
