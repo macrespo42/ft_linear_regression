@@ -1,7 +1,7 @@
 import numpy as np
 from pandas import DataFrame
 from linear_function import linear_function
-from parse_data import load
+from utils import load, rmse
 
 from describe import TrainingData
 
@@ -51,7 +51,6 @@ class LinearRegression:
     def save(self) -> None:
         thetas = DataFrame(data={"theta0": [self.theta0], "theta1": [self.theta1]})
         thetas.to_csv("dataset/thetas.csv", index=False)
-        print(thetas)
 
 
 def train() -> float:
@@ -76,6 +75,13 @@ def train() -> float:
     model.theta0, model.theta1 = data.denormalize(model.theta0, model.theta1)
 
     model.save()
+
+    # Bonus: display MAE and MSE to evaluate model accuracy
+    y_pred = []
+    for i in range(len(x_train)):
+        y_pred.append(linear_function(model.theta0, model.theta1, x_train[i]))
+
+    print(f"Mean Squared Error (MSE): {rmse(y_train, y_pred)}")
 
 
 if __name__ == "__main__":

@@ -1,25 +1,11 @@
 from linear_function import linear_function
-from parse_data import load
+from utils import get_thetas
 
 
 def get_mileage() -> int:
     print("Please enter a mileage: ")
     mileage = input()
     return float(mileage)
-
-
-def get_thetas() -> tuple[float]:
-    theta0 = 0
-    theta1 = 0
-    try:
-        df = load("dataset/thetas.csv")
-        theta0, theta1 = (df["theta0"][0], df["theta1"][0])
-    except Exception:
-        print(
-            """WARNING: the model is not trained, it must lead to incorrects predictions.
-To train the model run train.py\n"""
-        )
-    return theta0, theta1
 
 
 def predict_price() -> float:
