@@ -1,4 +1,5 @@
 import numpy as np
+from pandas import DataFrame
 from linear_function import linear_function
 from parse_data import load
 
@@ -10,28 +11,28 @@ class LinearRegression:
     def __init__(self, learning_rate=0.01, n_iters=1500) -> None:
         self.learning_rate = learning_rate
         self.n_iters = n_iters
-        self.theta0 = 0  # b
-        self.theta1 = 0  # w
+        self.theta0 = 0.0  # b
+        self.theta1 = 0.0  # w
 
-    def _compute_cost(self, x_train: np.ndarray, y_train: np.ndarray):
+    def _compute_cost(self, x: np.ndarray, y: np.ndarray) -> float:
         total_cost = 0
-        m = len(x_train)
+        m = len(x)
         for i in range(m):
-            f = linear_function(self.theta0, self.theta1, x_train[i])
-            total_cost += (f - y_train[i]) ** 2
+            f = linear_function(self.theta0, self.theta1, x[i])
+            total_cost += (f - y[i]) ** 2
         return total_cost / (2 * m)
 
-    def _compute_gradient(self, x_train: np.ndarray, y_train: np.ndarray) -> float:
-        m = len(x_train)
+    def _compute_gradient(self, x: np.ndarray, y: np.ndarray) -> float:
+        m = len(x)
 
         dj_theta0 = 0
         dj_theta1 = 0
 
         for i in range(m):
-            prediction = linear_function(self.theta0, self.theta1, x_train[i])
+            prediction = linear_function(self.theta0, self.theta1, x[i])
 
-            theta0_i = (prediction - y_train[i]) * x_train[i]
-            theta1_i = prediction - y_train[i]
+            theta0_i = (prediction - y[i]) * x[i]
+            theta1_i = prediction - y[i]
 
             dj_theta0 += theta0_i
             dj_theta1 += theta1_i
@@ -41,7 +42,7 @@ class LinearRegression:
 
         return dj_theta0, dj_theta1
 
-    def fit(self, x: np.ndarray, y: np.ndarray):
+    def fit(self, x: np.ndarray, y: np.ndarray) -> tuple[float]:
         for i in range(self.n_iters):
             dj_dw, dj_db = self._compute_gradient(x, y)
 
@@ -49,9 +50,19 @@ class LinearRegression:
             self.theta0 -= self.learning_rate * dj_db
         return self.theta1, self.theta0
 
+    def save(self) -> None:
+        thetas = DataFrame(data={"theta0": [self.theta0], "theta1": [self.theta1]})
+        thetas.to_csv("dataset/thetas.csv")
+        print(thetas)
 
-def train(mileage: int) -> float:
-    df = load("dataset/data.csv")
+
+def train() -> float:
+    df = None
+    try:
+        df = load("dataset/data.csv")
+    except FileNotFoundError as e:
+        print(e)
+        exit(1)
 
     x_train, y_train = (df["km"].values, df["price"].values)
 
@@ -63,27 +74,13 @@ def train(mileage: int) -> float:
 
     model = LinearRegression()
     # without normalize
-    # theta1, theta0 = model.fit(x_train, y_train)
+    theta1, theta0 = model.fit(x_train, y_train)
 
     # wit normalize
-    theta1, theta0 = model.fit(x_norm, y_norm)
-    theta0, theta1 = data.denormalize(theta0, theta1)
-
-    m = len(x_train)
-    predicted = np.zeros(m)
-
-    for i in range(m):
-        predicted[i] = theta1 * x_train[i] + theta0
-
-    # plot LinearRegression TRAIT
-    plt.plot(x_train, predicted, c="b")
-    plt.scatter(x_train, y_train, marker="x", c="r")
-
-    plt.title("Price vs KM")
-    plt.ylabel("Price")
-    plt.xlabel("KM")
-    plt.show()
+    # theta1, theta0 = model.fit(x_norm, y_norm)
+    # theta0, theta1 = data.denormalize(theta0, theta1)
+    model.save()
 
 
 if __name__ == "__main__":
-    train(13000)
+    train()
