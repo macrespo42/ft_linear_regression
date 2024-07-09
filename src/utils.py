@@ -17,7 +17,7 @@ def load(path: str) -> pd.DataFrame:
     return data_file
 
 
-def get_thetas() -> tuple[float]:
+def get_thetas() -> tuple[float, float]:
     theta0 = 0
     theta1 = 0
     try:

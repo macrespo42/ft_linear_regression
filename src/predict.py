@@ -2,7 +2,7 @@ from linear_function import linear_function
 from utils import get_thetas
 
 
-def get_mileage() -> int:
+def get_mileage() -> float:
     print("Please enter a mileage: ")
     mileage = input()
     return float(mileage)

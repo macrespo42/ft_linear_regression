@@ -14,6 +14,9 @@ class LinearRegression:
         self.theta1 = 0.0  # w
 
     def _compute_cost(self, x: np.ndarray, y: np.ndarray) -> float:
+        """_compute_cost(self, x: np.ndarray, y: np.ndarray) -> float
+        compute the cost J of the actual thetas
+        """
         total_cost = 0
         m = len(x)
         for i in range(m):
@@ -21,11 +24,14 @@ class LinearRegression:
             total_cost += (f - y[i]) ** 2
         return total_cost / (2 * m)
 
-    def _compute_gradient(self, x: np.ndarray, y: np.ndarray) -> float:
+    def _compute_gradient(self, x: np.ndarray, y: np.ndarray) -> tuple[float, float]:
+        """_compute_gradient(self, x: np.ndarray, y: np.ndarray) -> tuple[float, float]
+        compute the dj_theta0 and dj_theta1 for the gradient descent algorithm
+        """
         m = len(x)
 
-        dj_theta0 = 0
-        dj_theta1 = 0
+        dj_theta0: float = 0.0
+        dj_theta1: float = 0.0
 
         for i in range(m):
             prediction = linear_function(self.theta0, self.theta1, x[i])
@@ -39,21 +45,27 @@ class LinearRegression:
         dj_theta0 /= m
         dj_theta1 /= m
 
-        return dj_theta0, dj_theta1
+        return (dj_theta0, dj_theta1)
 
     def fit(self, x: np.ndarray, y: np.ndarray) -> None:
-        for i in range(self.n_iters):
+        """fit(self, x: np.ndarray, y: np.ndarray) -> None
+        compute the best theta0 and theta1 using gradient descent algorithm
+        """
+        for _ in range(self.n_iters):
             dj_theta1, dj_theta0 = self._compute_gradient(x, y)
 
             self.theta1 -= self.learning_rate * dj_theta1
             self.theta0 -= self.learning_rate * dj_theta0
 
     def save(self) -> None:
+        """save(self) -> None
+        save the thetas to a csv file
+        """
         thetas = DataFrame(data={"theta0": [self.theta0], "theta1": [self.theta1]})
         thetas.to_csv("dataset/thetas.csv", index=False)
 
 
-def train() -> float:
+def train() -> None:
     df = None
     try:
         df = load("dataset/data.csv")
