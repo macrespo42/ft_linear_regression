@@ -1,3 +1,4 @@
+from typing import Any
 import pandas as pd
 import numpy as np
 
@@ -17,9 +18,9 @@ def load(path: str) -> pd.DataFrame:
     return data_file
 
 
-def get_thetas() -> tuple[float, float]:
-    theta0 = 0
-    theta1 = 0
+def get_thetas() -> tuple[Any, Any]:
+    theta0 = 0.0
+    theta1 = 0.0
     try:
         df = load("dataset/thetas.csv")
         theta0, theta1 = (df["theta0"][0], df["theta1"][0])

@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from utils import load, get_thetas
 from linear_function import linear_function
 import pandas as pd
+import numpy as np
 
 
 def show_dataset(df: pd.DataFrame) -> None:
@@ -22,6 +23,10 @@ def show_linear_regression(df: pd.DataFrame) -> None:
     """
 
     x, y = (df["km"].values, df["price"].values)
+
+    x = np.array(x)
+    y = np.array(y)
+
     theta0, theta1 = get_thetas()
 
     y_predict = []
@@ -37,6 +42,7 @@ def show_linear_regression(df: pd.DataFrame) -> None:
 
 
 def main():
+    """main function"""
     df = None
     try:
         df = load("dataset/data.csv")

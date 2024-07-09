@@ -66,6 +66,9 @@ class LinearRegression:
 
 
 def train() -> None:
+    """train() -> None
+    train the LinearRegression model then save the thetas in thetas.csv
+    """
     df = None
     try:
         df = load("dataset/data.csv")
@@ -74,6 +77,8 @@ def train() -> None:
         exit(1)
 
     x_train, y_train = (df["km"].values, df["price"].values)
+    x_train = np.array(x_train)
+    y_train = np.array(y_train)
 
     data = TrainingData(x_train, y_train)
     x_norm, y_norm = data.normalize()
@@ -92,7 +97,9 @@ def train() -> None:
     for i in range(len(x_train)):
         y_pred.append(linear_function(model.theta0, model.theta1, x_train[i]))
 
-    print(f"Root Mean Squared Error (RMSE): {rmse(y_train, y_pred)}")
+    print(
+        f"Root Mean Squared Error (RMSE): {rmse(np.array(y_train), np.array(y_pred))}"
+    )
 
 
 if __name__ == "__main__":

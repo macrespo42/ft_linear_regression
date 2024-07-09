@@ -32,13 +32,11 @@ class TrainingData:
 
         return (x_normalized, y_normalized)
 
-    def denormalize(
-        self, theta0: float, theta1: float
-    ) -> tuple[np.floating, np.floating]:
+    def denormalize(self, theta0: float, theta1: float) -> tuple[float, float]:
         """def denormalize(self, theta0: float, theta1: float) -> tuple[np.floating, np.floating]
         denormalize thetas using z-score algorithm
         """
         d_theta1 = theta1 * (self.y_std / self.x_std)
         d_theta0 = (theta0 * self.y_std) + self.y_mean - d_theta1 * self.x_mean
 
-        return d_theta0, d_theta1
+        return float(d_theta0), float(d_theta1)
