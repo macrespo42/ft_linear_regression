@@ -2,14 +2,17 @@ import numpy as np
 from pandas import DataFrame
 from linear_function import linear_function
 from utils import load, rmse
+import math
+import sys
 
 from describe import TrainingData
 
 
 class LinearRegression:
-    def __init__(self, learning_rate=0.01, n_iters=1000) -> None:
+    def __init__(self, learning_rate=0.01, n_iters=1000, verbose=False) -> None:
         self.learning_rate = learning_rate
         self.n_iters = n_iters
+        self.verbose = verbose
         self.theta0 = 0.0  # b
         self.theta1 = 0.0  # w
 
@@ -51,11 +54,17 @@ class LinearRegression:
         """fit(self, x: np.ndarray, y: np.ndarray) -> None
         compute the best theta0 and theta1 using gradient descent algorithm
         """
-        for _ in range(self.n_iters):
+        J_history = []
+        for i in range(self.n_iters):
             dj_theta1, dj_theta0 = self._compute_gradient(x, y)
 
             self.theta1 -= self.learning_rate * dj_theta1
             self.theta0 -= self.learning_rate * dj_theta0
+
+            if self.verbose:
+                J_history.append(self._compute_cost(x, y))
+                if i % math.ceil(self.n_iters / 10) == 0:
+                    print(f"Iteration: {i:4} Cost {float(J_history[-1]):8.2f}")
 
     def save(self) -> None:
         """save(self) -> None
@@ -86,7 +95,11 @@ def train() -> None:
     if x_train.shape != y_train.shape:
         raise AssertionError("Training data as incorrect shapes")
 
-    model = LinearRegression()
+    verbose = False
+    if len(sys.argv) > 1:
+        verbose = "-v" in sys.argv[1::] or "--verbose" in sys.argv[1::]
+
+    model = LinearRegression(verbose=verbose)
     model.fit(x_norm, y_norm)
 
     model.theta0, model.theta1 = data.denormalize(model.theta0, model.theta1)
